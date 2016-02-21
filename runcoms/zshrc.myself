@@ -11,6 +11,9 @@ export EDITOR=vim
 ### alias & env
 case ${OSTYPE} in
   darwin*)
+
+		set -o emacs
+
     alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
     alias mvim="/Applications/MacVim.app/Contents/MacOS/mvim"
 
@@ -19,7 +22,6 @@ case ${OSTYPE} in
 			# manual install.
 			export NVM_DIR="$HOME/.nvm"
 			[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" 
-			echo "----> nvm installed."
 		fi
 
 		# sdkman
@@ -40,7 +42,6 @@ case ${OSTYPE} in
 		if [ -d "$HOME/.rbenv" ]; then
 			echo "----> rbenv installed."
 			eval "$(rbenv init -)"
-			# export PATH=$HOME/.rbenv/shims:$PATH
 		fi
 
     ;;
