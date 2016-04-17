@@ -71,7 +71,7 @@ fi
 function exists { which $1 &> /dev/null }
 if exists peco; then
 
-	function peco-select-history() {
+	function peco-select-history () {
 			local tac
 			exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
 			BUFFER=$(fc -l -n 1 | eval $tac | peco --query "$LBUFFER")
@@ -85,14 +85,14 @@ if exists peco; then
 		local selected_dir=$(cdr -l | awk '{ print $2 }' | peco)
 		if [ -n "$selected_dir" ]; then
 			BUFFER="cd ${selected_dir}"
-			zle accept-linel
+			zle accept-line
 		fi
 		zle clear-screen
 	} 
 	zle -N peco-cdr
 	bindkey '^p' peco-cdr
 
-	function peco-pt-searcher() {
+	function peco-pt-searcher () {
 		vim $(pt $@ | peco --query "$LBUFFER" | awk -F : '{print "-c " $2 " " $1}')
 	}
 
