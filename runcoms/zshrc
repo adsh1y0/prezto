@@ -92,7 +92,7 @@ if exists peco; then
 	zle -N peco-cdr
 	bindkey '^p' peco-cdr
 
-	function ptvim () {
+	function findvim () {
 		local selected_dir=$(pt $@ | peco --query "$LBUFFER" | awk -F : '{print "-c " $2 " " $1}')
 		if [ -n "$selected_dir" ]; then
 			BUFFER="vim ${selected_dir}"
