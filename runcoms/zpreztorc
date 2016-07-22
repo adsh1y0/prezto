@@ -23,24 +23,26 @@ zstyle ':prezto:*:*' color 'yes'
 # Set the Prezto modules to load (browse modules).
 # The order matters.
 zstyle ':prezto:load' pmodule \
-  'environment' \
+	'environment' \
   'terminal' \
-  'prompt' \
   'editor' \
   'history' \
   'directory' \
   'spectrum' \
   'utility' \
   'completion' \
-	'git' \
-	'homebrew' \
-	'history-substring-search' \
-	'syntax-highlighting' \
-	'autosuggestions' \
-	'tmux' \
-	'ruby' \
-	'ssh' \
-	'osx' \
+  'prompt' \
+	'archive' \
+	'command-not-found' \
+	# 'git' \
+	# 'homebrew' \
+	# 'tmux' \
+	# 'ssh' \
+	# 'osx' \
+	# 'history-substring-search' \
+	# 'syntax-highlighting' \
+	# 'autosuggestions' \
+	# 'ruby' \
 	# 'rails' \
 
 #
@@ -48,7 +50,7 @@ zstyle ':prezto:load' pmodule \
 #
 
 # Set the query found color.
-# zstyle ':prezto:module:autosuggestions:color' found ''
+# zstyle ':prezto:module:autosuggestions:color' found 'yes'
 
 #
 # Editor
@@ -58,7 +60,7 @@ zstyle ':prezto:load' pmodule \
 zstyle ':prezto:module:editor' key-bindings 'vi'
 
 # Auto convert .... to ../..
-# zstyle ':prezto:module:editor' dot-expansion 'yes'
+zstyle ':prezto:module:editor' dot-expansion 'yes'
 
 #
 # Git
@@ -101,7 +103,8 @@ zstyle ':prezto:module:editor' key-bindings 'vi'
 # Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
 # Auto set to 'off' on dumb terminals.
-zstyle ':prezto:module:prompt' theme 'sorin'
+# zstyle ':prezto:module:prompt' theme 'sorin'
+zstyle ':prezto:module:prompt' theme 'pure'
 
 #
 # Ruby
@@ -165,7 +168,7 @@ zstyle ':prezto:module:prompt' theme 'sorin'
 #
 
 # Auto start a session when Zsh is launched in a local terminal.
-zstyle ':prezto:module:tmux:auto-start' local 'yes'
+# zstyle ':prezto:module:tmux:auto-start' local 'yes'
 
 # Auto start a session when Zsh is launched in a SSH connection.
 # zstyle ':prezto:module:tmux:auto-start' remote 'yes'

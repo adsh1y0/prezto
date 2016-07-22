@@ -10,6 +10,9 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+unsetopt CORRECT
+setopt MAGIC_EQUAL_SUBST
+
 # Recent dirs handling
 # Use cdr & friends. See http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Recent-Directories
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
@@ -24,10 +27,20 @@ zstyle ':chpwd:*' recent-dirs-pushd true
 export LANG=ja_JP.UTF-8
 export EDITOR=vim
 
+### zsh history settings
+export HISTSIZE=1000
+export SAVEHIST=100000
+setopt hist_ignore_dups
+setopt EXTENDED_HISTORY
+setopt hist_ignore_all_dups 
+setopt hist_ignore_space
+setopt hist_save_no_dups
+setopt hist_no_store
+
 ### alias & env
 case ${OSTYPE} in
   darwin*)
-		set -o emacs
+    set -o emacs
     alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
     alias mvim="/Applications/MacVim.app/Contents/MacOS/mvim"
     ;;
@@ -46,7 +59,9 @@ fi
 if [ -d "$HOME/.sdkman" ]; then
 	#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 	export SDKMAN_DIR="$HOME/.sdkman"
+	setopt clobber
 	[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+	setopt noclobber
 fi
 
 # go
@@ -56,7 +71,6 @@ fi
 # fi
 #
 
-
 # rbenv
 if [ -d "$HOME/.rbenv" ]; then
 	eval "$(rbenv init -)"
@@ -64,73 +78,6 @@ fi
 
 if [ -d "$HOME/.pyenv" ]; then
 	eval "$(pyenv init -)"
-fi
-
-###########
-# peco
-function exists { which $1 &> /dev/null }
-if exists peco; then
-
-	function peco-select-history () {
-			local tac
-			exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
-			BUFFER=$(fc -l -n 1 | eval $tac | peco --query "$LBUFFER")
-			CURSOR=$#BUFFER         # move cursor
-			zle -R -c               # refresh
-	}
-	zle -N peco-select-history
-	bindkey '^R' peco-select-history
-		
-	function peco-cdr () {
-		local selected_dir=$(cdr -l | awk '{ print $2 }' | peco)
-		if [ -n "$selected_dir" ]; then
-			BUFFER="cd ${selected_dir}"
-			zle accept-line
-		fi
-		zle clear-screen
-	} 
-	zle -N peco-cdr
-	bindkey '^p' peco-cdr
-
-	function findvim () {
-		local selected_dir=$(pt $@ | peco --query "$LBUFFER" | awk -F : '{print "-c " $2 " " $1}')
-		if [ -n "$selected_dir" ]; then
-			BUFFER="vim ${selected_dir}"
-			zle accept-line
-		fi
-		zle clear-screen
-	}
-	
-	function peco-src () {
-		local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
-		if [ -n "$selected_dir" ]; then
-			BUFFER="cd ${selected_dir}"
-			zle accept-line
-		fi
-		zle clear-screen
-	}
-	zle -N peco-src
-	bindkey '^]' peco-src
-
-	function peco-tmux-session() {
-		local session=$(tmux list-sessions | peco | awk -F':' '{print $1}')
-		if [ -n "$session" ]; then
-			peco-insert-cmd "tmux attach -t $session"
-		fi
-	}
-	zle -N peco-tmux-session
-	bindkey '^\' peco-tmux-session
-
-	function peco-insert-cmd() {
-		if zle; then
-			BUFFER=$1
-			CURSOR=$#BUFFER
-			zle clear-screen
-		else
-			print -z $1
-		fi
-	}
-
 fi
 
 ########################################
@@ -142,4 +89,21 @@ export _JAVA_OPTIONS="-Dfile.encoding=UTF-8"
 if [ -f "$HOME/.zshrc.env" ]; then
   source "$HOME/.zshrc.env"
 fi
+
+fpath=("$HOME/.ghq/github.com/mollifier/"anyframe(N-/) $fpath)
+
+autoload -Uz anyframe-init
+anyframe-init
+
+bindkey '^p' anyframe-widget-cdr
+bindkey '^xp' anyframe-widget-put-history
+bindkey '^r' anyframe-widget-execute-history
+bindkey '^]' anyframe-widget-cd-ghq-repository
+bindkey '^\' anyframe-widget-tmux-attach
+
+bindkey '^xb' anyframe-widget-checkout-git-branch
+bindkey '^xk' anyframe-widget-kill
+
+# java
+export _JAVA_OPTIONS="-Dfile.encoding=UTF-8"
 
