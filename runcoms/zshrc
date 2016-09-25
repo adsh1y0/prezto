@@ -47,6 +47,8 @@ case ${OSTYPE} in
   linux*)
     set -o emacs
 
+		alias open="xdg-open"
+
 		if [ -d "$HOME/.linuxbrew" ]; then
 			export PATH=$HOME/.linuxbrew/bin:$PATH
 			export MANPATH=$HOME/.linuxbrew/share/man:$MANPATH
