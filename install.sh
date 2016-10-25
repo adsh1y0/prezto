@@ -3,10 +3,10 @@
 echo "-----> my prezto settings."
 
 # check go root
-if [ ! -d "$HOME/.go" ]; then
-	echo "install golang."
-	exit 1
-fi
+# if [ ! -d "$HOME/.go" ]; then
+# 	echo "install golang."
+# 	exit 1
+# fi
 
 rm -rf ~/.zprezto
 ln -s ~/.ghq/github.com/adsh1y0/prezto/ ~/.zprezto

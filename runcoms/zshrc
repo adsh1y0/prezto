@@ -3,6 +3,7 @@
 # Authors:
 #   Yutaka Yoshida <adsh1y0@gmail.com>
 #
+#
 
 ###########
 # Source Prezto.
@@ -56,8 +57,50 @@ case ${OSTYPE} in
 			export XDG_DATA_DIRS=$HOME/.linuxbrew/share:$XDG_DATA_DIRS
 		fi
 
+		if [ -e "$HOME/.linuxbrew/bin/pyenv" ]; then
+			export PYENV_ROOT=$HOME/.pyenv
+			export PATH="$PYENV_ROOT/bin:$PATH"
+			eval "$(pyenv init -)"
+			eval "$(pyenv virtualenv-init -)"
+		fi
+
+		if [ -f "/usr/local/bin/virtualenvwrapper.sh" ]; then
+			zsh /usr/local/bin/virtualenvwrapper.sh
+			export WORKON_HOME="$HOME/.virtualenvs"
+		fi
+
     ;;
 esac
+
+# java
+export _JAVA_OPTIONS="-Dfile.encoding=UTF-8"
+
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if [ -d "$HOME/.ghq/github.com/mollifier/anyframe" ]; then
+
+	fpath=("$HOME/.ghq/github.com/mollifier/"anyframe(N-/) $fpath)
+	autoload -Uz anyframe-init
+	anyframe-init
+	bindkey '^p' anyframe-widget-cdr
+	bindkey '^xp' anyframe-widget-put-history
+	bindkey '^r' anyframe-widget-execute-history
+	bindkey '^]' anyframe-widget-cd-ghq-repository
+	bindkey '^\' anyframe-widget-tmux-attach
+	bindkey '^xb' anyframe-widget-checkout-git-branch
+	bindkey '^xk' anyframe-widget-kill
+
+	# zstyle ":anyframe:selector:" use peco
+	zstyle ":anyframe:selector:" use fzf
+	zstyle ":anyframe:selector:fzf:" command 'fzf --extended'
+
+fi
+
+# 環境依存設定
+if [ -f "$HOME/.zshrc.env" ]; then
+  source "$HOME/.zshrc.env"
+fi
 
 # nvm
 if [ -d "$HOME/.nvm" ]; then
@@ -94,32 +137,3 @@ if [ -d "$HOME/.anyenv" ]; then
 	eval "$(anyenv init -)"
 fi
 
-# java
-export _JAVA_OPTIONS="-Dfile.encoding=UTF-8"
-
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-if [ -d "$HOME/.ghq/github.com/mollifier/anyframe" ]; then
-
-	fpath=("$HOME/.ghq/github.com/mollifier/"anyframe(N-/) $fpath)
-	autoload -Uz anyframe-init
-	anyframe-init
-	bindkey '^p' anyframe-widget-cdr
-	bindkey '^xp' anyframe-widget-put-history
-	bindkey '^r' anyframe-widget-execute-history
-	bindkey '^]' anyframe-widget-cd-ghq-repository
-	bindkey '^\' anyframe-widget-tmux-attach
-	bindkey '^xb' anyframe-widget-checkout-git-branch
-	bindkey '^xk' anyframe-widget-kill
-
-	# zstyle ":anyframe:selector:" use peco
-	zstyle ":anyframe:selector:" use fzf
-	zstyle ":anyframe:selector:fzf:" command 'fzf --extended'
-
-fi
-
-# 環境依存設定
-if [ -f "$HOME/.zshrc.env" ]; then
-  source "$HOME/.zshrc.env"
-fi
